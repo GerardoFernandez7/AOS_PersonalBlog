@@ -57,10 +57,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.firebase.bom)
 
     //implement navigation libraries
     implementation(libs.androidx.navigation.compose)
+
+    //implement firebase libraries
+    implementation(libs.firebase.bom)
     implementation (libs.google.firebase.storage.ktx)
     implementation (libs.google.firebase.firestore.ktx)
 
@@ -74,4 +76,7 @@ dependencies {
     // Add the dependencies for the App Check libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation(libs.com.google.firebase.firebase.appcheck.debug)
+
+    //implement datastore preferences
+    implementation (libs.androidx.datastore.preferences)
 }

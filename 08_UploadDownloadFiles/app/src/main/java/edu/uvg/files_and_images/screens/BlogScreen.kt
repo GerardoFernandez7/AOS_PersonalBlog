@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.uvg.files_and_images.data.UserData
+import edu.uvg.files_and_images.data.UserDataStore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -21,12 +23,23 @@ data class Post(
 )
 
 @Composable
-fun BlogScreen() {
+fun BlogScreen(userDataStore: UserDataStore) {
     val firestore = FirebaseFirestore.getInstance()
-    val posts = remember { mutableStateListOf<Post>() } // Estado para mantener la lista de posts
-    val coroutineScope = rememberCoroutineScope()
+    val posts = remember { mutableStateListOf<Post>() }
 
-    // Cargar publicaciones de Firebase cuando se inicie el Composable
+    val coroutineScope = rememberCoroutineScope()
+    var userData by remember { mutableStateOf(UserData("", "", "", "",0)) }
+
+    // Cargar datos de usuario desde DataStore
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            userDataStore.userData.collect {
+                userData = it
+            }
+        }
+    }
+
+    // Cargar publicaciones de Firebase
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             val snapshot = firestore.collection("posts")
@@ -42,17 +55,44 @@ fun BlogScreen() {
                     timestamp = doc.getLong("timestamp") ?: 0L
                 )
             }
-
             posts.addAll(fetchedPosts)
         }
     }
 
-    // Mostrar publicaciones en un LazyColumn
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        items(posts) { post ->
-            PostItem(post = post)
-            Spacer(modifier = Modifier.height(16.dp))
+    // Organizar el contenido en una columna
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Mostrar información del usuario
+        UserInfoDisplay(userData)
+
+        Spacer(modifier = Modifier.height(25.dp))
+        Text(text = "Publications", style = MaterialTheme.typography.headlineSmall)
+
+        // Mostrar publicaciones
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            items(posts) { post ->
+                PostItem(post = post)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
+    }
+}
+
+
+@Composable
+fun UserInfoDisplay(userData: UserData) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(text = "User Information", style = MaterialTheme.typography.headlineSmall)
+
+        Text(text = "First Name: ${userData.firstName}")
+        Text(text = "Last Name: ${userData.lastName}")
+        Text(text = "Email: ${userData.email}")
+        Text(text = "Birth Date: ${userData.birthDate}")
+        Text(text = "Age: ${userData.age}")
     }
 }
 
