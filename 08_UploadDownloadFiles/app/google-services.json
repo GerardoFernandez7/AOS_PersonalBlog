@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "720475424494",
+    "project_id": "personal-blog-2bb34",
+    "storage_bucket": "personal-blog-2bb34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720475424494:android:96d3450d84ce48cb18d5ff",
+        "android_client_info": {
+          "package_name": "edu.uvg.files_and_images"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5Gk41k2QNiqfU-nCLuWtY94S9_LGYqWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
